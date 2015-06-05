@@ -1,6 +1,9 @@
 %tr
   %td
-    = image_tag (Rails.application.secrets.omniauth_site + comment['icon_url']), class: 'comment__icon', title: comment['participation_name']
+    - if comment['icon_url'].include?('http')
+      = image_tag (comment['icon_url']), class: 'comment__icon', title: comment['participation_name']
+    - else
+      = image_tag (Rails.application.secrets.omniauth_site + comment['icon_url']), class: 'comment__icon', title: comment['participation_name']
   %td{:style=>"width: 500px"}
     = comment['content']
   %td
