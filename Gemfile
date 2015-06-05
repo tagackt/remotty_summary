@@ -33,7 +33,6 @@ group :development do
   gem 'annotate'
   gem 'hirb'
   gem 'hirb-unicode'
-  gem 'pry-rails'
   gem 'html2haml'
 end
 

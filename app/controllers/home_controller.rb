@@ -1,5 +1,8 @@
 class HomeController < ApplicationController
   def index
-    @user = current_user
+    if user_signed_in?
+      @user = current_user
+      @timeline = @user.timeline(params[:from])
+    end
   end
 end

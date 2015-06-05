@@ -1,5 +1,12 @@
 %h1 remotty summary
-= link_to 'ログイン', signin_path, class: 'btn btn-primary'
-- if @user
-  = @user.name
+- if user_signed_in?
+  - last_comment = nil
+  %ul.list-group.js-comments
+    - @timeline.each do |comment|
+      - last_comment = comment
+      = render 'comment', comment: comment
+  - if @timeline.count == 20
+    = link_to 'more', root_url(from: last_comment['created_at']), remote: true, class: 'js-more-link'
+- else
+  = link_to 'ログイン', signin_path, class: 'btn btn-primary'
 
