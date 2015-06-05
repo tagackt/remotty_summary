@@ -1,8 +1,4 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  # devise :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :trackable, :validatable
 
   def self.create_with_omniauth(auth)
     create! do |user|
@@ -22,24 +18,22 @@ class User < ActiveRecord::Base
   def last_commented_at
     participation = Remotty::User.me(self.token).participation
     comments_res = Remotty.access_token(token).get("/api/v1/rooms/participations/#{participation.id}/comments.json").parsed
-    Time.new(comments_res.last['created_at'])
+    Time.new(comments_res.last['created_at']).to_i
   end
 
   def timeline(from = nil)
-    begin
-      from = Time.parse(from)
-    rescue
-      from = nil
-    end
     participation = Remotty::User.me(self.token).participation
+    last_commented_at = nil
     timeline = Remotty.access_token(token).get(URI.encode("/api/v1/rooms/logs.json?from='#{from || last_commented_at}'")).parsed
     filtered_timeline = Array.new
     timeline.each do |comment|
       if comment['type'] == 'comment'
         filtered_timeline.push(comment)
       end
+      last_commented_at = Time.parse(comment['created_at']).to_i
     end
-    filtered_timeline
+    last_commented_at = nil if timeline.count < 20
+    [filtered_timeline, last_commented_at]
   end
 
 end

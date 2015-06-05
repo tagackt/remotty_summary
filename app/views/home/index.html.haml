@@ -1,12 +1,13 @@
 %h1 remotty summary
 - if user_signed_in?
+  = @user.name + "さんが最後に発言した#{I18n.l Time.at(@last_commented_at)}以降のコメントを表示しています。"
   - last_comment = nil
-  %ul.list-group.js-comments
+  %table.table-striped.table-condensed.js-comments
     - @timeline.each do |comment|
       - last_comment = comment
       = render 'comment', comment: comment
-  - if @timeline.count == 20
-    = link_to 'more', root_url(from: last_comment['created_at']), remote: true, class: 'js-more-link'
+  - if @last_commented_at.present?
+    = link_to 'more', root_url(from: @last_commented_at), remote: true, class: 'js-more-link'
 - else
   = link_to 'ログイン', signin_path, class: 'btn btn-primary'
 
