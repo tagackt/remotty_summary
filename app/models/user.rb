@@ -29,7 +29,8 @@ class User < ActiveRecord::Base
 
   def timeline(from = nil)
     participation = Remotty::User.me(self.token).participation
-    last_commented_at = last_commented_at_to_i
+    # last_commented_at = last_commented_at_to_i
+    last_commented_at = nil
     # 変な' をつけてしまっている・・・・　あれの原因
     timeline = Remotty.access_token(token).get(URI.encode("/api/v1/rooms/logs.json?from='#{from || last_commented_at}'")).parsed
     filtered_timeline = Array.new
