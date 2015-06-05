@@ -7,7 +7,7 @@
       - last_comment = comment
       = render 'comment', comment: comment
   - if @last_commented_at.present?
-    = link_to 'more', root_url(from: @last_commented_at), remote: true, class: 'js-more-link'
+    = link_to '新しいコメントのロード', root_url(from: @last_commented_at), remote: true, class: 'js-more-link btn btn-primary'
 - else
   = link_to 'ログイン', signin_path, class: 'btn btn-primary'
 

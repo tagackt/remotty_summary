@@ -1,12 +1,7 @@
--#%li.list-group-item
--#  = image_tag (Rails.application.secrets.omniauth_site + comment['icon_url']), class: 'comment__icon', title: comment['participation_name']
--#  = comment['content']
--#  = I18n.l Time.parse(comment['created_at'])
-
 %tr
   %td
     = image_tag (Rails.application.secrets.omniauth_site + comment['icon_url']), class: 'comment__icon', title: comment['participation_name']
-  %td
+  %td{:style=>"width: 500px"}
     = comment['content']
   %td
     = I18n.l Time.parse(comment['created_at'])
