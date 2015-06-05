@@ -15,15 +15,22 @@ class User < ActiveRecord::Base
     self.update_column(:token, oauth_data.credentials.token)
   end
 
-  def last_commented_at
+  def last_comment
     participation = Remotty::User.me(self.token).participation
     comments_res = Remotty.access_token(token).get("/api/v1/rooms/participations/#{participation.id}/comments.json").parsed
-    Time.new(comments_res.last['created_at']).to_i
+    comments_res.last
+  end
+
+  def last_commented_at_to_i
+    participation = Remotty::User.me(self.token).participation
+    comments_res = Remotty.access_token(token).get("/api/v1/rooms/participations/#{participation.id}/comments.json").parsed
+    Time.parse(comments_res.last['created_at']).to_i
   end
 
   def timeline(from = nil)
     participation = Remotty::User.me(self.token).participation
-    last_commented_at = nil
+    last_commented_at = last_commented_at_to_i
+    # 変な' をつけてしまっている・・・・　あれの原因
     timeline = Remotty.access_token(token).get(URI.encode("/api/v1/rooms/logs.json?from='#{from || last_commented_at}'")).parsed
     filtered_timeline = Array.new
     timeline.each do |comment|
